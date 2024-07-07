@@ -18,7 +18,7 @@ self.onmessage = async (e) => {
     }
     else if (e.data.type === "load") {
         return new Promise(async (resolve) => {
-            await loadSummarizer();
+            await loadSummarizer(e.data.model);
 
             self.postMessage({
                 type: 'loaded'
@@ -38,12 +38,12 @@ async function runSummarizer(text: string) {
     });
 }
 
-async function loadSummarizer(): Promise<void> {
+async function loadSummarizer(model: string): Promise<void> {
     return new Promise(async (resolve) => {
         if (!summarizer) {
             env.allowLocalModels = false;
             env.useBrowserCache = false;
-            summarizer = await pipeline('summarization', 'Xenova/distilbart-cnn-6-6');
+            summarizer = await pipeline('summarization', model || 'Xenova/distilbart-cnn-6-6');
             console.log("loaded summarizer", summarizer)
             resolve();
         }

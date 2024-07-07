@@ -34,7 +34,7 @@ export async function loadTranscriber(model: "tiny" | "base", timestamps: boolea
         if (!transcriber) {
             env.allowLocalModels = false;
             env.useBrowserCache = false;
-            transcriber = await pipeline('automatic-speech-recognition', model, {
+            transcriber = await pipeline('automatic-speech-recognition', `Xenova/whisper-${model}`, {
                 // @ts-ignore
                 return_timestamps: timestamps,
                 language

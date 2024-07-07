@@ -17,7 +17,7 @@ self.onmessage = async (e) => {
     }
     else if (e.data.type === "load") {
         return new Promise(async (resolve) => {
-            await loadOCR();
+            await loadOCR(e.data.model);
 
             self.postMessage({
                 type: 'loaded'
@@ -37,12 +37,12 @@ async function runOCR(image: Blob) {
     });
 }
 
-async function loadOCR(): Promise<void> {
+async function loadOCR(model: string): Promise<void> {
     return new Promise(async (resolve) => {
         if (!ocr) {
             env.allowLocalModels = false;
             env.useBrowserCache = false;
-            ocr = await pipeline('image-to-text', 'Xenova/trocr-small-printed');
+            ocr = await pipeline('image-to-text', model || 'Xenova/trocr-small-printed');
             console.log("loaded ocr", ocr)
             resolve();
         }

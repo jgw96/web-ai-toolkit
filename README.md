@@ -1,7 +1,7 @@
 
 # Web AI Toolkit
 
-**Alpha Version: v0.0.1**
+**Currently in Alpha**
 
 The Web AI Toolkit simplifies the integration of AI features, such as OCR and audio file transcription, into your application. It ensures optimal performance by running all AI workloads locally, leveraging WebGPU and WASM technologies.
 
@@ -22,8 +22,11 @@ npm install web-ai-toolkit
 |                       | timestamps     | boolean                | false         |
 |                       | language       | string                 | "en-US"       |
 | textToSpeech          | text           | string                 | -             |
+|                       | model          | string                 | "Xenova/mms-tts-eng"|
 | summarize             | text           | string                 | -             |
+|                       | model          | string                 | "Xenova/distilbart-cnn-6-6"|
 | ocr                   | image          | Blob                   | -             |
+|                       | model          | string                 | "Xenova/trocr-small-printed|
 
 ## Technical Details
 

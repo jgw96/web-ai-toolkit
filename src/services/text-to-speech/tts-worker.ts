@@ -18,7 +18,7 @@ self.onmessage = async (e) => {
     }
     else if (e.data.type === "load") {
         return new Promise(async (resolve) => {
-            await loadSynthesizer();
+            await loadSynthesizer(e.data.model);
 
             self.postMessage({
                 type: 'loaded'
@@ -39,13 +39,13 @@ async function runSynthesizer(text: string) {
     });
 }
 
-async function loadSynthesizer(): Promise<void> {
+async function loadSynthesizer(model: string): Promise<void> {
     console.log("loading synthesizer", synthesizer)
     return new Promise(async (resolve) => {
         if (!synthesizer) {
             env.allowLocalModels = false;
             env.useBrowserCache = false;
-            synthesizer = await pipeline('text-to-speech', 'Xenova/mms-tts-eng');
+            synthesizer = await pipeline('text-to-speech', model || 'Xenova/mms-tts-eng');
             console.log("loaded synthesizer", synthesizer)
             resolve();
         }
