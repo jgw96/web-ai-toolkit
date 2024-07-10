@@ -3,7 +3,7 @@ let whisperWorker: Worker;
 // @ts-ignore
 import WhisperWorker from './worker?worker&inline'
 
-export async function loadTranscriber(model: "tiny" | "base", timestamps: boolean, language: string): Promise<void> {
+export async function loadTranscriber(model: string = "Xenova/whisper-tiny", timestamps: boolean, language: string): Promise<void> {
     return new Promise(async (resolve) => {
         whisperWorker = new WhisperWorker();
 
@@ -22,7 +22,7 @@ export async function loadTranscriber(model: "tiny" | "base", timestamps: boolea
     });
 }
 
-export function doLocalWhisper(audioFile: Blob, model: "tiny" | "base") {
+export function doLocalWhisper(audioFile: Blob, model: string = "Xenova/whisper-tiny") {
     return new Promise((resolve, reject) => {
         try {
             const fileReader = new FileReader();
@@ -70,7 +70,7 @@ export function doLocalWhisper(audioFile: Blob, model: "tiny" | "base") {
                 whisperWorker.postMessage({
                     type: "transcribe",
                     blob: audio,
-                    model: model || "tiny",
+                    model: model || "Xenova/whisper-tiny",
                 })
 
             };

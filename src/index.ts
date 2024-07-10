@@ -1,4 +1,4 @@
-export async function transcribeAudioFile(audioFile: Blob, model: "tiny" | "base", timestamps: boolean = false, language: string = "en-US") {
+export async function transcribeAudioFile(audioFile: Blob, model: string = "Xenova/whisper-tiny", timestamps: boolean = false, language: string = "en-US") {
     try {
         const { loadTranscriber, doLocalWhisper } = await import("./services/speech-recognition/whisper-ai");
         await loadTranscriber(model, timestamps, language);
