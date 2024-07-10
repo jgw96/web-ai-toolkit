@@ -18,7 +18,7 @@ self.onmessage = async (e) => {
         })
     }
     else if (e.data.type === "load") {
-        await loadTranscriber(e.data.model || "tiny", e.data.timestamps, e.data.language);
+        await loadTranscriber(e.data.model || 'Xenova/whisper-tiny', e.data.timestamps, e.data.language);
         self.postMessage({
             type: 'loaded'
         });
@@ -29,12 +29,12 @@ self.onmessage = async (e) => {
     }
 }
 
-export async function loadTranscriber(model: "tiny" | "base", timestamps: boolean, language: string): Promise<void> {
+export async function loadTranscriber(model: string = "Xenova/whisper-tiny", timestamps: boolean, language: string): Promise<void> {
     return new Promise(async (resolve) => {
         if (!transcriber) {
             env.allowLocalModels = false;
             env.useBrowserCache = false;
-            transcriber = await pipeline('automatic-speech-recognition', `Xenova/whisper-${model}`, {
+            transcriber = await pipeline('automatic-speech-recognition', model || 'Xenova/whisper-tiny', {
                 // @ts-ignore
                 return_timestamps: timestamps,
                 language

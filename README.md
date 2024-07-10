@@ -1,8 +1,6 @@
 
 # Web AI Toolkit
 
-**Currently in Alpha**
-
 The Web AI Toolkit simplifies the integration of AI features, such as OCR and audio file transcription, into your application. It ensures optimal performance by running all AI workloads locally, leveraging WebGPU and WASM technologies.
 
 ## Installation
@@ -18,7 +16,7 @@ npm install web-ai-toolkit
 | Function Name         | Parameter      | Type                   | Default Value |
 |-----------------------|----------------|------------------------|---------------|
 | transcribeAudioFile   | audioFile      | Blob                   | -             |
-|                       | model          | "tiny" \| "base"       | "tiny"        |
+|                       | model          | string                 | "Xenova/whisper-tiny"|
 |                       | timestamps     | boolean                | false         |
 |                       | language       | string                 | "en-US"       |
 | textToSpeech          | text           | string                 | -             |
@@ -42,7 +40,7 @@ Here are examples of how to use each function:
 import { transcribeAudioFile } from 'web-ai-toolkit';
 
 const audioFile = ...; // Your audio file Blob
-const transcription = await transcribeAudioFile(audioFile, "base", true, "en-US");
+const transcription = await transcribeAudioFile(audioFile, "Xenova/whisper-tiny", true, "en-US");
 console.log(transcription);
 ```
 

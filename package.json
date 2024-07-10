@@ -1,6 +1,6 @@
 {
   "name": "web-ai-toolkit",
-  "version": "0.1.1",
+  "version": "0.1.6",
   "repository": "https://github.com/jgw96/web-ai-toolkit",
   "keywords": [
     "ai",
@@ -17,7 +17,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "description": "AI powered features on the web made easy",
-  "main": "dist/web-ai-toolkit.js",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -27,7 +27,8 @@
   "license": "ISC",
   "devDependencies": {
     "typescript": "^5.5.3",
-    "vite": "^5.3.3"
+    "vite": "^5.3.3",
+    "vite-plugin-dts": "^3.9.1"
   },
   "dependencies": {
     "@xenova/transformers": "^2.17.2"
