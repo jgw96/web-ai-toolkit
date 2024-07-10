@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import dts from 'vite-plugin-dts';
 // import basicSsl from '@vitejs/plugin-basic-ssl';
 
 // https://vitejs.dev/config/
@@ -18,7 +19,8 @@ export default defineConfig({
     target: "esnext",
     lib: {
       entry: "src/index.ts",
-      formats: ["es"] 
+      formats: ["es"],
+      fileName: "index",
     },
     rollupOptions: {
       output: {
@@ -27,5 +29,8 @@ export default defineConfig({
     }
   },
   plugins: [
+    dts({
+      rollupTypes: true
+    })
   ]
 })
