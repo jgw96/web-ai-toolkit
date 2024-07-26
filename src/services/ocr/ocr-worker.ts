@@ -1,4 +1,5 @@
 /* eslint-disable no-async-promise-executor */
+// @ts-ignore
 import { pipeline, env } from '@xenova/transformers';
 
 let ocr: any = undefined;
@@ -42,7 +43,21 @@ async function loadOCR(model: string): Promise<void> {
         if (!ocr) {
             env.allowLocalModels = false;
             env.useBrowserCache = false;
-            ocr = await pipeline('image-to-text', model || 'Xenova/trocr-small-printed');
+
+            const session_options = {
+                executionProviders: [
+                    {
+                        name: "ml" in navigator ? "webnn" : "webgpu",
+                        deviceType: "gpu",
+                        powerPreference: "default",
+                    },
+                ],
+                logSeverityLevel: 0,
+            };
+
+            ocr = await pipeline('image-to-text', model || 'Xenova/trocr-small-printed', {
+                session_options
+            });
             console.log("loaded ocr", ocr)
             resolve();
         }

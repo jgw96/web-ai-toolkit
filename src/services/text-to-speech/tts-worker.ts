@@ -1,5 +1,7 @@
 /* eslint-disable no-async-promise-executor */
+// @ts-ignore
 import { pipeline, env } from '@xenova/transformers';
+import { session_options } from '../../utils';
 
 let synthesizer: any = undefined;
 
@@ -45,7 +47,9 @@ async function loadSynthesizer(model: string): Promise<void> {
         if (!synthesizer) {
             env.allowLocalModels = false;
             env.useBrowserCache = false;
-            synthesizer = await pipeline('text-to-speech', model || 'Xenova/mms-tts-eng');
+            synthesizer = await pipeline('text-to-speech', model || 'Xenova/mms-tts-eng', {
+                session_options
+            });
             console.log("loaded synthesizer", synthesizer)
             resolve();
         }

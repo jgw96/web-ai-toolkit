@@ -1,4 +1,5 @@
 /* eslint-disable no-async-promise-executor */
+// @ts-ignore
 import { AutomaticSpeechRecognitionPipeline, pipeline, env } from '@xenova/transformers';
 
 let transcriber: AutomaticSpeechRecognitionPipeline | undefined = undefined;

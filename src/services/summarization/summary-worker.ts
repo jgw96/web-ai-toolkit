@@ -1,5 +1,7 @@
 /* eslint-disable no-async-promise-executor */
+// @ts-ignore
 import { pipeline, env } from '@xenova/transformers';
+import { session_options } from '../../utils';
 
 let summarizer: any = undefined;
 
@@ -43,7 +45,9 @@ async function loadSummarizer(model: string): Promise<void> {
         if (!summarizer) {
             env.allowLocalModels = false;
             env.useBrowserCache = false;
-            summarizer = await pipeline('summarization', model || 'Xenova/distilbart-cnn-6-6');
+            summarizer = await pipeline('summarization', model || 'Xenova/distilbart-cnn-6-6', {
+                session_options
+            });
             console.log("loaded summarizer", summarizer)
             resolve();
         }
