@@ -21,7 +21,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "vite build"
+    "build": "vite build",
+    "start": "npm run build && npx httpster test.html"
   },
   "author": "",
   "license": "ISC",

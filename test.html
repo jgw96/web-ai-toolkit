@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <button id="summarize_button">Test Summarize</button>
+    <button id="text_to_speech_button">Test Text to Speech</button>
+
+
+    <script type="module">
+        document.querySelector("#summarize_button").addEventListener("click", async () => {
+            const { summarize } = await import("/dist/index.js");
+
+            const text = "JavaScript is a versatile and widely-used programming language primarily known for its role in front-end web development. It enables developers to create interactive and dynamic content on websites, such as responding to user inputs, animating elements, and updating content without requiring a page reload. JavaScript can be run in the browser, which makes it essential for creating modern web applications, but it is also used on the server side with environments like Node.js. Its flexibility, combined with a vast ecosystem of libraries and frameworks, makes JavaScript a fundamental tool for building both simple websites and complex web applications.";
+            const summary = await summarize(text);
+            console.log(summary);
+        });
+
+        document.querySelector("#text_to_speech_button").addEventListener("click", async () => {
+            const { textToSpeech } = await import("/dist/index.js");
+
+            const text = "Hello, world!";
+            const audio = await textToSpeech(text);
+            console.log(audio);
+        });
+    </script>
+</body>
+
+</html>
