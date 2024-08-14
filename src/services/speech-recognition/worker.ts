@@ -37,7 +37,8 @@ export async function loadTranscriber(model: string = "Xenova/whisper-tiny", tim
             transcriber = await pipeline('automatic-speech-recognition', model || 'Xenova/whisper-tiny', {
                 // @ts-ignore
                 return_timestamps: timestamps,
-                language
+                language,
+                device: "webgpu"
             });
 
             resolve();
