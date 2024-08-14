@@ -1,5 +1,5 @@
 /* eslint-disable no-async-promise-executor */
-import { AutomaticSpeechRecognitionPipeline, pipeline, env } from '@xenova/transformers';
+import { AutomaticSpeechRecognitionPipeline, pipeline, env } from '@huggingface/transformers';
 
 let transcriber: AutomaticSpeechRecognitionPipeline | undefined = undefined;
 
@@ -97,9 +97,8 @@ function chunk_callback(chunk: any) {
 
 // Inject custom callback function to handle merging of chunks
 function callback_function(item: any) {
-    const time_precision =
-        transcriber!.processor.feature_extractor.config.chunk_length /
-        transcriber!.model.config.max_source_positions;
+    // @ts-ignore
+    const time_precision = transcriber!.processor.feature_extractor.config.chunk_length / transcriber!.model.config.max_source_positions;
 
     const last: any = chunks_to_process[chunks_to_process.length - 1];
 

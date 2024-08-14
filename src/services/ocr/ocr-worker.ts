@@ -1,5 +1,5 @@
 /* eslint-disable no-async-promise-executor */
-import { pipeline, env } from '@xenova/transformers';
+import { pipeline, env } from '@huggingface/transformers';
 
 let ocr: any = undefined;
 
