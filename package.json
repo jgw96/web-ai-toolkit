@@ -32,7 +32,7 @@
     "vite-plugin-dts": "^3.9.1"
   },
   "dependencies": {
-    "@huggingface/transformers": "^3.0.0-alpha.5",
+    "@huggingface/transformers": "^3.0.0-alpha.14",
     "@xenova/transformers": "^2.17.2"
   }
 }
