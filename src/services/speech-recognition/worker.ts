@@ -38,7 +38,7 @@ export async function loadTranscriber(model: string = "Xenova/whisper-tiny", tim
                 // @ts-ignore
                 return_timestamps: timestamps,
                 language,
-                device: "webgpu"
+                device: (navigator as any).ml ? "webnn" : "webgpu"
             });
 
             resolve();

@@ -43,7 +43,7 @@ async function loadOCR(model: string): Promise<void> {
             env.allowLocalModels = false;
             env.useBrowserCache = false;
             ocr = await pipeline('image-to-text', model || 'Xenova/trocr-small-printed', {
-                device: "webgpu"
+                device: (navigator as any).ml ? "webnn" : "webgpu"
             });
             console.log("loaded ocr", ocr)
             resolve();
