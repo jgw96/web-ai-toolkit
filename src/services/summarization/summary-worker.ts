@@ -45,7 +45,7 @@ async function loadSummarizer(model: string): Promise<void> {
             env.useBrowserCache = false;
             summarizer = await pipeline('summarization', model || 'Xenova/distilbart-cnn-6-6', {
                 dtype: "fp32",
-                device: "webgpu"
+                device: (navigator as any).ml ? "webnn" : "webgpu"
             });
             console.log("loaded summarizer", summarizer)
             resolve();

@@ -1,7 +1,7 @@
 
 # Web AI Toolkit
 
-The Web AI Toolkit simplifies the integration of AI features, such as OCR and audio file transcription, into your application. It ensures optimal performance by running all AI workloads locally, leveraging WebGPU and WASM technologies.
+The Web AI Toolkit simplifies the integration of AI features, such as OCR, speech-to-text, text summarization and more into your application. It ensures data privacy and offline capability by running all AI workloads locally, leveraging WebNN when available, with a fallback to WebGPU.
 
 ## Installation
 
@@ -13,22 +13,22 @@ npm install web-ai-toolkit
 
 ## Available Functions
 
-| Function Name         | Parameter      | Type                   | Default Value |
-|-----------------------|----------------|------------------------|---------------|
-| transcribeAudioFile   | audioFile      | Blob                   | -             |
-|                       | model          | string                 | "Xenova/whisper-tiny"|
-|                       | timestamps     | boolean                | false         |
-|                       | language       | string                 | "en-US"       |
-| textToSpeech          | text           | string                 | -             |
-|                       | model          | string                 | "Xenova/mms-tts-eng"|
-| summarize             | text           | string                 | -             |
-|                       | model          | string                 | "Xenova/distilbart-cnn-6-6"|
-| ocr                   | image          | Blob                   | -             |
-|                       | model          | string                 | "Xenova/trocr-small-printed|
+| Function Name         | Parameter      | Type                   | Default Value | Supported Hardware |
+|-----------------------|----------------|------------------------|---------------|--------------------|
+| transcribeAudioFile   | audioFile      | Blob                   | -             | NPU                |
+|                       | model          | string                 | "Xenova/whisper-tiny"|                    |
+|                       | timestamps     | boolean                | false         |                    |
+|                       | language       | string                 | "en-US"       |                    |
+| textToSpeech          | text           | string                 | -             | GPU                |
+|                       | model          | string                 | "Xenova/mms-tts-eng"|                    |
+| summarize             | text           | string                 | -             | GPU                |
+|                       | model          | string                 | "Xenova/distilbart-cnn-6-6"|                |
+| ocr                   | image          | Blob                   | -             | GPU                |
+|                       | model          | string                 | "Xenova/trocr-small-printed"|                 |
 
 ## Technical Details
 
-The Web AI Toolkit utilizes the [transformers.js project](https://huggingface.co/docs/transformers.js/index) to run AI workloads. All AI processing is performed locally on the device, ensuring data privacy and reducing latency.
+The Web AI Toolkit utilizes the [transformers.js project](https://huggingface.co/docs/transformers.js/index) to run AI workloads. All AI processing is performed locally on the device, ensuring data privacy and reducing latency. AI workloads are run using the [WebNN API](https://learn.microsoft.com/en-us/windows/ai/directml/webnn-overview) when available, otherwise falling back to the WebGPU API. Both of these APIs are used to "hardware accelerate" the AI inferences, with WebNN targeting NPUs and GPUs, and WebGPU strictly targeting GPUs.
 
 ## Usage
 
