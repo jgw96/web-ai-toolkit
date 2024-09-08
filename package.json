@@ -7,7 +7,9 @@
     "AI",
     "Web AI",
     "ONNX Runtime",
-    "ai toolkit"
+    "ai toolkit",
+    "WebNN",
+    "webnn"
   ],
   "homepage": "https://jgw96.github.io/web-ai-toolkit/",
   "bugs": {
