@@ -1,12 +1,9 @@
 let summaryWorker: Worker;
 
-// @ts-ignore
-import SummaryWorker from './summary-worker?worker&inline';
-
 export async function loadSummarizer(model: string = "Xenova/distilbart-cnn-6-6"): Promise<void> {
     return new Promise(async (resolve) => {
         if (!summaryWorker) {
-            summaryWorker = new SummaryWorker();
+            summaryWorker = new Worker(new URL('./summary-worker.ts', import.meta.url), { type: 'module' });
         }
 
         summaryWorker.onmessage = async (e) => {
