@@ -1,9 +1,12 @@
 let ttsWorker: Worker;
 
+// @ts-ignore
+import TTSWorker from './tts-worker?worker&inline';
+
 export async function loadTTS(model: string = "Xenova/mms-tts-eng"): Promise<void> {
     return new Promise(async (resolve) => {
         if (!ttsWorker) {
-          ttsWorker = new Worker(new URL('./tts-worker.ts', import.meta.url), { type: 'module' });
+          ttsWorker = new TTSWorker();
         }
 
         ttsWorker.onmessage = async (e) => {
