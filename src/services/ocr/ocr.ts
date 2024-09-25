@@ -1,12 +1,9 @@
 let ocrWorker: Worker;
 
-// @ts-ignore
-import OCRWorker from './ocr-worker?worker&inline';
-
 export async function loadOCR(model: string): Promise<void> {
     return new Promise(async (resolve) => {
         if (!ocrWorker) {
-            ocrWorker = new OCRWorker();
+            ocrWorker = new Worker(new URL('./ocr-worker.ts', import.meta.url), { type: 'module' });
         }
 
         ocrWorker.onmessage = async (e) => {

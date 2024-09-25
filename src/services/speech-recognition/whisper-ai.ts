@@ -1,11 +1,10 @@
 let whisperWorker: Worker;
 
-// @ts-ignore
-import WhisperWorker from './worker?worker&inline'
-
 export async function loadTranscriber(model: string = "Xenova/whisper-tiny", timestamps: boolean, language: string): Promise<void> {
     return new Promise(async (resolve) => {
-        whisperWorker = new WhisperWorker();
+        if (!whisperWorker) {
+            whisperWorker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' });
+        }
 
         whisperWorker.onmessage = async (e) => {
             if (e.data.type === "loaded") {
