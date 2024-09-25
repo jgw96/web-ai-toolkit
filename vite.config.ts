@@ -12,9 +12,9 @@ export default defineConfig({
       target: "es2022",
     }
   },
-  publicDir: 'dist',
   build: {
     sourcemap: false,
+    assetsDir: "code",
     cssMinify: true,
     target: "esnext",
     lib: {
@@ -27,9 +27,6 @@ export default defineConfig({
         format: "es",
       },
     }
-  },
-  server: {
-    open: '/test.html',
   },
   plugins: [
     dts({
