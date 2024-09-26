@@ -1,6 +1,6 @@
 export async function transcribeAudioFile(audioFile: Blob, model: string = "Xenova/whisper-tiny", timestamps: boolean = false, language: string = "en-US") {
     try {
-        const { loadTranscriber, doLocalWhisper } = await import("./services/speech-recognition/whisper-ai");
+        const { loadTranscriber, doLocalWhisper } = await import("./services/speech-recognition/recognition");
         await loadTranscriber(model, timestamps, language);
         return doLocalWhisper(audioFile, model);
     }
@@ -12,9 +12,8 @@ export async function transcribeAudioFile(audioFile: Blob, model: string = "Xeno
 
 export async function textToSpeech(text: string, model: string = "Xenova/mms-tts-eng") {
     try {
-        const { loadTTS, doLocalTTS } = await import("./services/text-to-speech/text-to-speech");
-        await loadTTS(model);
-        return doLocalTTS(text);
+        const { runSynthesizer } = await import("./services/text-to-speech/tts");
+        return runSynthesizer(text, model);
     }
     catch (err) {
         console.error(err);
@@ -24,9 +23,8 @@ export async function textToSpeech(text: string, model: string = "Xenova/mms-tts
 
 export async function summarize(text: string, model: string = "Xenova/distilbart-cnn-6-6") {
     try {
-        const { loadSummarizer, doLocalSummarize } = await import("./services/summarization/summarization");
-        await loadSummarizer(model);
-        return doLocalSummarize(text);
+        const { runSummarizer } = await import("./services/summarization/summarization");
+        return runSummarizer(text, model);
     }
     catch (err) {
         console.error(err);
@@ -36,9 +34,8 @@ export async function summarize(text: string, model: string = "Xenova/distilbart
 
 export async function ocr(image: Blob, model: string = "Xenova/trocr-small-printed") {
     try {
-        const { loadOCR, doLocalOCR } = await import("./services/ocr/ocr");
-        await loadOCR(model);
-        return doLocalOCR(image);
+        const { runOCR } = await import("./services/ocr/ocr");
+        return runOCR(image, model);
     }
     catch (err) {
         console.error(err);
