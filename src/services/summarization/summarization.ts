@@ -1,46 +1,33 @@
-let summaryWorker: Worker;
+import { pipeline, env } from '@huggingface/transformers';
 
-// @ts-ignore
-import SummaryWorker from './summary-worker?worker&inline';
+let summarizer: any = undefined;
 
-export async function loadSummarizer(model: string = "Xenova/distilbart-cnn-6-6"): Promise<void> {
+export async function runSummarizer(text: string, model: string = "Xenova/distilbart-cnn-6-6") {
     return new Promise(async (resolve) => {
-        if (!summaryWorker) {
-            summaryWorker = new SummaryWorker();
-        }
+        if (!summarizer) {
+            await loadSummarizer(model);
+        };
 
-        summaryWorker.onmessage = async (e) => {
-            if (e.data.type === "loaded") {
-                resolve();
-            }
-        }
-
-        summaryWorker.postMessage({
-            type: "load",
-            model
-        });
+        const out = await summarizer(text);
+        resolve(out);
     });
 }
 
-export function doLocalSummarize(text: string) {
-    return new Promise((resolve, reject) => {
-        try {
-            summaryWorker.onmessage = async (e) => {
-                if (e.data.type === "summarize") {
-                    resolve(e.data.summary);
-                }
-                else if (e.data.type === "error") {
-                    reject(e.data.error);
-                }
-            }
+async function loadSummarizer(model: string): Promise<void> {
+    return new Promise(async (resolve) => {
+        if (!summarizer) {
+            env.allowLocalModels = false;
+            env.useBrowserCache = false;
 
-            summaryWorker.postMessage({
-                type: "summarize",
-                text
+            summarizer = await pipeline('summarization', model || 'Xenova/distilbart-cnn-6-6', {
+                dtype: "fp32",
+                device: (navigator as any).ml ? "webnn" : "webgpu"
             });
+            console.log("loaded summarizer", summarizer)
+            resolve();
         }
-        catch (err) {
-            reject(err);
+        else {
+            resolve();
         }
     });
 }

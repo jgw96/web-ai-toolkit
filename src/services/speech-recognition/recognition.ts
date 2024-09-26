@@ -3,30 +3,49 @@ import { AutomaticSpeechRecognitionPipeline, pipeline, env } from '@huggingface/
 
 let transcriber: AutomaticSpeechRecognitionPipeline | undefined = undefined;
 
-self.onmessage = async (e) => {
-    if (e.data.type === 'transcribe') {
-        return new Promise((resolve) => {
-            console.log("in worker", e.data)
-            localTranscribe(e.data.blob).then((transcription) => {
-                console.log("in worker", transcription)
-                self.postMessage({
-                    type: 'transcribe',
-                    transcription: transcription
+export function doLocalWhisper(audioFile: Blob, model: string = "Xenova/whisper-tiny") {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!transcriber) {
+                await loadTranscriber(model || 'Xenova/whisper-tiny', false, 'en');
+            }
+            
+            const fileReader = new FileReader();
+            fileReader.onloadend = async () => {
+                const audioCTX = new AudioContext({
+                    sampleRate: 16000,
                 });
-                resolve(transcription);
-            })
-        })
-    }
-    else if (e.data.type === "load") {
-        await loadTranscriber(e.data.model || 'Xenova/whisper-tiny', e.data.timestamps, e.data.language);
-        self.postMessage({
-            type: 'loaded'
-        });
-        return Promise.resolve();
-    }
-    else {
-        return Promise.reject('Unknown message type');
-    }
+                const arrayBuffer = fileReader.result as ArrayBuffer;
+                const audioData = await audioCTX.decodeAudioData(arrayBuffer);
+
+                let audio;
+                if (audioData.numberOfChannels === 2) {
+                    const SCALING_FACTOR = Math.sqrt(2);
+
+                    const left = audioData.getChannelData(0);
+                    const right = audioData.getChannelData(1);
+
+                    audio = new Float32Array(left.length);
+                    for (let i = 0; i < audioData.length; ++i) {
+                        audio[i] = SCALING_FACTOR * (left[i] + right[i]) / 2;
+                    }
+                } else {
+                    // If the audio is not stereo, we can just use the first channel:
+                    audio = audioData.getChannelData(0);
+                }
+
+                const output = await localTranscribe(audio);
+                resolve(output);
+
+
+
+            };
+            fileReader.readAsArrayBuffer(audioFile);
+        }
+        catch (err) {
+            reject(err);
+        }
+    })
 }
 
 export async function loadTranscriber(model: string = "Xenova/whisper-tiny", timestamps: boolean, language: string): Promise<void> {
@@ -49,13 +68,14 @@ export async function loadTranscriber(model: string = "Xenova/whisper-tiny", tim
     })
 }
 
-export async function localTranscribe(audio: Blob): Promise<string> {
+export async function localTranscribe(audio: Float32Array): Promise<string> {
     return new Promise(async (resolve, reject) => {
         if (transcriber) {
             // @ts-ignore
             const output = await transcriber(audio, {
                 chunk_length_s: 30,
                 stride_length_s: 5,
+                // @ts-ignore
                 callback_function: callback_function, // after each generation step
                 chunk_callback: chunk_callback, // after each chunk is processed
             });
