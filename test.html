@@ -12,6 +12,16 @@
     <button id="summarize_button">Test Summarize</button>
     <button id="text_to_speech_button">Test Text to Speech</button>
 
+    <div id="whisper-block">
+        <input type="file" id="whisper-file" accept="audio/*" />
+        <button id="speech-to-text-button">Test Speech to Text</button>
+    </div>
+
+    <div id="ocr-block">
+        <input type="file" id="ocr-file" accept="image/*" />
+        <button id="image-to-text-button">Test Image to Text</button>
+    </div>
+
 
     <script type="module">
         document.querySelector("#summarize_button").addEventListener("click", async () => {
@@ -28,6 +38,23 @@
             const text = "Hello, world!";
             const audio = await textToSpeech(text);
             console.log(audio);
+        });
+
+        document.querySelector("#speech-to-text-button").addEventListener("click", async () => {
+            const { transcribeAudioFile } = await import("/dist/index.js");
+
+            const file = document.querySelector("#whisper-file").files[0];
+            const text = await transcribeAudioFile(file);
+            console.log(text);
+        });
+
+        document.querySelector("#image-to-text-button").addEventListener("click", async () => {
+            const { ocr } = await import("/dist/index.js");
+
+            const file = document.querySelector("#ocr-file").files[0];
+            const text = await ocr(URL.createObjectURL(file));
+            console.log(text);
+            URL.revokeObjectURL(file);
         });
     </script>
 </body>
