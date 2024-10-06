@@ -4,13 +4,17 @@ import { pipeline, env } from '@huggingface/transformers';
 let synthesizer: any = undefined;
 
 export async function runSynthesizer(text: string, model: string = "Xenova/mms-tts-eng") {
-    return new Promise(async (resolve) => {
-        console.log("synthesizer", synthesizer, text)
-        if (!synthesizer) {
-            await loadSynthesizer(model);
-        };
-        const out = await synthesizer(text);
-        resolve(out);
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!synthesizer) {
+                await loadSynthesizer(model);
+            };
+            const out = await synthesizer(text);
+            resolve(out);
+        }
+        catch (err) {
+            reject(err);
+        }
     });
 }
 

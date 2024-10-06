@@ -22,16 +22,20 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
     "build": "vite build",
-    "start": "npm run build && npx httpster test.html"
+    "start": "npm run build && npx httpster test.html",
+    "test:browser": "vitest --workspace=vitest.workspace.ts"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@vitest/browser": "^2.1.2",
+    "playwright": "^1.47.2",
     "typescript": "^5.6.2",
     "vite": "^5.4.8",
-    "vite-plugin-dts": "^4.2.2"
+    "vite-plugin-dts": "^4.2.2",
+    "vitest": "^2.1.2"
   },
   "dependencies": {
     "@huggingface/transformers": "^3.0.0-alpha.16",
