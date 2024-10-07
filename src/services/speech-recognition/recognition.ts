@@ -1,5 +1,6 @@
 /* eslint-disable no-async-promise-executor */
 import { AutomaticSpeechRecognitionPipeline, pipeline, env } from '@huggingface/transformers';
+import { webGPUCheck } from '../../utils';
 
 let transcriber: AutomaticSpeechRecognitionPipeline | undefined = undefined;
 
@@ -57,7 +58,7 @@ export async function loadTranscriber(model: string = "Xenova/whisper-tiny", tim
                 // @ts-ignore
                 return_timestamps: timestamps,
                 language,
-                device: (navigator as any).ml ? "webnn" : "webgpu"
+                device: (navigator as any).ml ? "webnn" : await webGPUCheck() ? "webgpu" : "wasm"
             });
 
             resolve();

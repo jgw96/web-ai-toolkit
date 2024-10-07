@@ -1,5 +1,6 @@
 /* eslint-disable no-async-promise-executor */
 import { pipeline, env } from '@huggingface/transformers';
+import { webGPUCheck } from '../../utils';
 
 let ocr: any = undefined;
 
@@ -29,7 +30,7 @@ async function loadOCR(model: string): Promise<void> {
             env.allowLocalModels = false;
             env.useBrowserCache = false;
             ocr = await pipeline('image-to-text', model || 'Xenova/trocr-small-printed', {
-                device: (navigator as any).ml ? "webnn" : "webgpu"
+                device: (navigator as any).ml ? "webnn" : await webGPUCheck() ? "webgpu" : "wasm"
             });
             console.log("loaded ocr", ocr)
             resolve();
