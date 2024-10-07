@@ -13,17 +13,20 @@ npm install web-ai-toolkit
 
 ## Available Functions
 
+*Note: Supported hardware is listed in priority of device selection. For example, for transcribing an audio file,
+the code will attempt to choose an NPU first, then a GPU and finally the CPU if neither of the first two are found.*
+
 | Function Name         | Parameter      | Type                   | Default Value | Supported Hardware |
 |-----------------------|----------------|------------------------|---------------|--------------------|
-| transcribeAudioFile   | audioFile      | Blob                   | -             | NPU                |
+| transcribeAudioFile   | audioFile      | Blob                   | -             | NPU / GPU / CPU               |
 |                       | model          | string                 | "Xenova/whisper-tiny"|                    |
 |                       | timestamps     | boolean                | false         |                    |
 |                       | language       | string                 | "en-US"       |                    |
-| textToSpeech          | text           | string                 | -             | GPU                |
+| textToSpeech          | text           | string                 | -             | GPU / CPU               |
 |                       | model          | string                 | "Xenova/mms-tts-eng"|                    |
-| summarize             | text           | string                 | -             | GPU                |
+| summarize             | text           | string                 | -             | GPU / CPU               |
 |                       | model          | string                 | "Xenova/distilbart-cnn-6-6"|                |
-| ocr                   | image          | Blob                   | -             | GPU                |
+| ocr                   | image          | Blob                   | -             | GPU / CPU               |
 |                       | model          | string                 | "Xenova/trocr-small-printed"|                 |
 
 ## Technical Details
