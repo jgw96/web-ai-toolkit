@@ -1,4 +1,5 @@
 import { pipeline, env } from '@huggingface/transformers';
+import { webGPUCheck } from '../../utils';
 
 let summarizer: any = undefined;
 
@@ -26,7 +27,7 @@ async function loadSummarizer(model: string): Promise<void> {
 
             summarizer = await pipeline('summarization', model || 'Xenova/distilbart-cnn-6-6', {
                 dtype: "fp32",
-                device: (navigator as any).ml ? "webnn" : "webgpu"
+                device: (navigator as any).ml ? "webnn" : await webGPUCheck() ? "webgpu" : "wasm"
             });
             console.log("loaded summarizer", summarizer)
             resolve();
