@@ -42,3 +42,14 @@ export async function ocr(image: Blob, model: string = "Xenova/trocr-small-print
         return err;
     }
 }
+
+export async function classifyImage(image: Blob, model: string = "Xenova/resnet-50") {
+    try {
+        const { runClassifier } = await import("./services/image-classification/image-classification");
+        return runClassifier(image, model);
+    }
+    catch (err) {
+        console.error(err);
+        return err;
+    }
+}
