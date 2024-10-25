@@ -14,7 +14,7 @@ npm install web-ai-toolkit
 ## Available Functions
 
 *Note: Supported hardware is listed in priority of device selection. For example, for transcribing an audio file,
-the code will attempt to choose an NPU first, then a GPU and finally the CPU if neither of the first two are found.*
+the code will attempt to choose the GPU first and then the CPU otherwise.*
 
 | Function Name         | Parameter      | Type                   | Default Value | Supported Hardware |
 |-----------------------|----------------|------------------------|---------------|--------------------|
@@ -28,7 +28,7 @@ the code will attempt to choose an NPU first, then a GPU and finally the CPU if 
 |                       | model          | string                 | "Xenova/distilbart-cnn-6-6"|                |
 | ocr                   | image          | Blob                   | -             | GPU / CPU               |
 |                       | model          | string                 | "Xenova/trocr-small-printed"|                 |
-| image-classification  | image          | Blob                   | -             | NPU / GPU / CPU               |
+| classifyImage         | image          | Blob                   | -             | NPU / GPU / CPU               |
 |                       | model          | string                 | "Xenova/resnet-50"|                 |
 
 ## Technical Details
