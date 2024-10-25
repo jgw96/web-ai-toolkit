@@ -18,7 +18,7 @@ the code will attempt to choose an NPU first, then a GPU and finally the CPU if 
 
 | Function Name         | Parameter      | Type                   | Default Value | Supported Hardware |
 |-----------------------|----------------|------------------------|---------------|--------------------|
-| transcribeAudioFile   | audioFile      | Blob                   | -             | NPU / GPU / CPU               |
+| transcribeAudioFile   | audioFile      | Blob                   | -             | GPU / CPU               |
 |                       | model          | string                 | "Xenova/whisper-tiny"|                    |
 |                       | timestamps     | boolean                | false         |                    |
 |                       | language       | string                 | "en-US"       |                    |
@@ -28,10 +28,12 @@ the code will attempt to choose an NPU first, then a GPU and finally the CPU if 
 |                       | model          | string                 | "Xenova/distilbart-cnn-6-6"|                |
 | ocr                   | image          | Blob                   | -             | GPU / CPU               |
 |                       | model          | string                 | "Xenova/trocr-small-printed"|                 |
+| image-classification  | image          | Blob                   | -             | NPU / GPU / CPU               |
+|                       | model          | string                 | "Xenova/resnet-50"|                 |
 
 ## Technical Details
 
-The Web AI Toolkit utilizes the [transformers.js project](https://huggingface.co/docs/transformers.js/index) to run AI workloads. All AI processing is performed locally on the device, ensuring data privacy and reducing latency. AI workloads are run using the [WebNN API](https://learn.microsoft.com/en-us/windows/ai/directml/webnn-overview) when available, otherwise falling back to the WebGPU API. Both of these APIs are used to "hardware accelerate" the AI inferences, with WebNN targeting NPUs and GPUs, and WebGPU strictly targeting GPUs.
+The Web AI Toolkit utilizes the [transformers.js project](https://huggingface.co/docs/transformers.js/index) to run AI workloads. All AI processing is performed locally on the device, ensuring data privacy and reducing latency. AI workloads are run using the [WebNN API](https://learn.microsoft.com/en-us/windows/ai/directml/webnn-overview) when available, otherwise falling back to the WebGPU API, or even to the CPU with WebAssembly. Choosing the correct hardware to target is handled by the library.
 
 ## Usage
 
@@ -74,6 +76,16 @@ import { ocr } from 'web-ai-toolkit';
 
 const image = ...; // Your image Blob
 const text = await ocr(image);
+console.log(text);
+```
+
+### Image Classification
+
+```javascript
+import { classifyImage } from 'web-ai-toolkit';
+
+const image = ...; // Your image Blob
+const text = await classifyImage(image);
 console.log(text);
 ```
 

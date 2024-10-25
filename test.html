@@ -22,6 +22,11 @@
         <button id="image-to-text-button">Test Image to Text</button>
     </div>
 
+    <div id="image-classify-block">
+        <input type="file" id="image-classify-file" accept="image/*" />
+        <button id="image-classify-button">Test Image Classification</button>
+    </div>
+
 
     <script type="module">
         document.querySelector("#summarize_button").addEventListener("click", async () => {
@@ -53,6 +58,15 @@
 
             const file = document.querySelector("#ocr-file").files[0];
             const text = await ocr(URL.createObjectURL(file));
+            console.log(text);
+            URL.revokeObjectURL(file);
+        });
+
+        document.querySelector("#image-classify-button").addEventListener("click", async () => {
+            const { classifyImage } = await import("/dist/index.js");
+
+            const file = document.querySelector("#image-classify-file").files[0];
+            const text = await classifyImage(URL.createObjectURL(file));
             console.log(text);
             URL.revokeObjectURL(file);
         });

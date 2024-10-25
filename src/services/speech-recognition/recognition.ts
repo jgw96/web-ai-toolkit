@@ -10,7 +10,7 @@ export function doLocalWhisper(audioFile: Blob, model: string = "Xenova/whisper-
             if (!transcriber) {
                 await loadTranscriber(model || 'Xenova/whisper-tiny', false, 'en');
             }
-            
+
             const fileReader = new FileReader();
             fileReader.onloadend = async () => {
                 const audioCTX = new AudioContext({
@@ -58,8 +58,10 @@ export async function loadTranscriber(model: string = "Xenova/whisper-tiny", tim
                 // @ts-ignore
                 return_timestamps: timestamps,
                 language,
-                device: (navigator as any).ml ? "webnn" : await webGPUCheck() ? "webgpu" : "wasm"
+                // @ts-ignore
+                device: await webGPUCheck() ? "webgpu" : "wasm"
             });
+
 
             resolve();
         }
@@ -127,8 +129,6 @@ function callback_function(item: any) {
     // Update tokens of last chunk
     last.tokens = [...item[0].output_token_ids];
 
-    console.log("callback_function", item, last)
-
     // Merge text chunks
     // TODO optimise so we don't have to decode all chunks every time
     // @ts-ignore
@@ -138,7 +138,6 @@ function callback_function(item: any) {
         force_full_sequences: false,
     });
 
-    console.log("callback_function", data);
 
     self.postMessage({
         type: 'transcribe-interim',
