@@ -32,7 +32,7 @@ async function loadOCR(model: string): Promise<void> {
             ocr = await pipeline('image-to-text', model || 'Xenova/trocr-small-printed', {
                 device: (navigator as any).ml ? "webnn" : await webGPUCheck() ? "webgpu" : "wasm"
             });
-            console.log("loaded ocr", ocr)
+
             resolve();
         }
         else {

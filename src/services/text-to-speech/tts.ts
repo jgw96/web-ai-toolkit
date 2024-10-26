@@ -19,13 +19,11 @@ export async function runSynthesizer(text: string, model: string = "Xenova/mms-t
 }
 
 async function loadSynthesizer(model: string): Promise<void> {
-    console.log("loading synthesizer", synthesizer)
     return new Promise(async (resolve) => {
         if (!synthesizer) {
             env.allowLocalModels = false;
             env.useBrowserCache = false;
             synthesizer = await pipeline('text-to-speech', model || 'Xenova/mms-tts-eng');
-            console.log("loaded synthesizer", synthesizer)
             resolve();
         }
         else {

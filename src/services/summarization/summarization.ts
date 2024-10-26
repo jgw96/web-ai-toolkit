@@ -29,7 +29,7 @@ async function loadSummarizer(model: string): Promise<void> {
                 dtype: "fp32",
                 device: (navigator as any).ml ? "webnn" : await webGPUCheck() ? "webgpu" : "wasm"
             });
-            console.log("loaded summarizer", summarizer)
+
             resolve();
         }
         else {
