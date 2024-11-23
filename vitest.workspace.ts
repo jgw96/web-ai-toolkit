@@ -9,7 +9,7 @@ export default defineWorkspace([
       testTimeout: 2000000,
       browser: {
         enabled: true,
-        name: 'edge-canary',
+        name: 'edge',
         provider: 'preview',
       },
     },
