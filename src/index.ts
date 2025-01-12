@@ -53,3 +53,14 @@ export async function classifyImage(image: Blob, model: string = "Xenova/resnet-
         return err;
     }
 }
+
+export async function doRAGSearch(texts: string[], query: string) {
+    try {
+        const { simpleRAG } = await import("./services/rag/rag");
+        return simpleRAG(texts, query);
+    }
+    catch (err) {
+        console.error(err);
+        return err;
+    }
+}
