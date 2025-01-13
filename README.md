@@ -39,6 +39,8 @@ The Web AI Toolkit utilizes the [transformers.js project](https://huggingface.co
 
 Here are examples of how to use each function:
 
+### RAG (Retrieval-Augmented Generation)
+
 ### Transcribe Audio File
 
 ```javascript

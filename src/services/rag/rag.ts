@@ -39,6 +39,10 @@ class WebLLMEmbeddings implements EmbeddingsInterface {
 
 const initProgressCallback = (report: webllm.InitProgressReport) => {
     console.log('Progress:', report);
+
+    window.dispatchEvent(new CustomEvent('model-loading', {
+        detail: report,
+    }));
 };
 
 let vectorStore: MemoryVectorStore;
@@ -68,6 +72,10 @@ export async function loadUpDocuments(texts: string[]): Promise<MemoryVectorStor
 }
 
 export async function simpleRAG(texts: string[], query: string): Promise<any> {
+    if (!navigator.gpu) {
+        Promise.reject("WebGPU not supported");
+    }
+
     const vectorStore = await loadUpDocuments(texts);
     const retriever = vectorStore.asRetriever();
 
