@@ -20,6 +20,7 @@
     "removeComments": false,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
+    "types": ["@webgpu/types"],
   },
   "include": [
     "src/**/*.ts"

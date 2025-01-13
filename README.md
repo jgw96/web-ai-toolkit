@@ -30,14 +30,32 @@ the code will attempt to choose the GPU first and then the CPU otherwise.*
 |                       | model          | string                 | "Xenova/trocr-small-printed"|                 |
 | classifyImage         | image          | Blob                   | -             | NPU / GPU / CPU               |
 |                       | model          | string                 | "Xenova/resnet-50"|                 |
-
-## Technical Details
-
-The Web AI Toolkit utilizes the [transformers.js project](https://huggingface.co/docs/transformers.js/index) to run AI workloads. All AI processing is performed locally on the device, ensuring data privacy and reducing latency. AI workloads are run using the [WebNN API](https://learn.microsoft.com/en-us/windows/ai/directml/webnn-overview) when available, otherwise falling back to the WebGPU API, or even to the CPU with WebAssembly. Choosing the correct hardware to target is handled by the library.
+| doRAGSearch           | texts          | Array<string>          | []            | GPU
+|                       | query          | string                 | ""            |                      |
 
 ## Usage
 
 Here are examples of how to use each function:
+
+### RAG (Retrieval-Augmented Generation)
+
+```javascript
+import { doRAGSearch } from 'web-ai-toolkit';
+
+window.showOpenFilePicker().then(async (file) => {
+    const fileBlob = await file[0].getFile();
+    const text = await fileBlob.text();
+
+    // text can be derived from anything
+    // this sample is just meant to be extremely simple
+    // for example, your text could be an array of text that you have OCR'ed
+    // from some photos
+
+    const query = "My Search Query";
+    const ragQuery = await doRAGSearch([text], query);
+    console.log(ragQuery);
+});
+```
 
 ### Transcribe Audio File
 
@@ -88,6 +106,10 @@ const image = ...; // Your image Blob
 const text = await classifyImage(image);
 console.log(text);
 ```
+
+## Technical Details
+
+The Web AI Toolkit utilizes the [transformers.js project](https://huggingface.co/docs/transformers.js/index) to run AI workloads. All AI processing is performed locally on the device, ensuring data privacy and reducing latency. AI workloads are run using the [WebNN API](https://learn.microsoft.com/en-us/windows/ai/directml/webnn-overview) when available, otherwise falling back to the WebGPU API, or even to the CPU with WebAssembly. Choosing the correct hardware to target is handled by the library.
 
 ## Contribution
 
