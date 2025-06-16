@@ -21,10 +21,16 @@ export async function textToSpeech(text: string, model: string = "Xenova/mms-tts
     }
 }
 
-export async function summarize(text: string, model: string = "Xenova/distilbart-cnn-6-6") {
+export async function summarize(text: string) {
     try {
-        const { runSummarizer } = await import("./services/summarization/summarization");
-        return runSummarizer(text, model);
+        if ('Summarizer' in self) {
+            const { runNativeSummarizer } = await import("./services/summarization/native-summarization");
+            return runNativeSummarizer(text);
+        }
+        else {
+            const { runSummarizer } = await import("./services/summarization/summarization");
+            return runSummarizer(text);
+        }
     }
     catch (err) {
         console.error(err);
