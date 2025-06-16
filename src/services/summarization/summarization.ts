@@ -10,7 +10,8 @@ export async function runSummarizer(
     maxChunkLength: number = 1000, 
     overlap: number = 100, 
     minChunkLength: number = 200,
-    onProgress?: (progress: number, message: string) => void
+    onProgress?: (progress: number, message: string) => void,
+    maxConcurrency: number = 1 // Set to 1 for HuggingFace models to avoid concurrent access issues
 ) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -18,6 +19,14 @@ export async function runSummarizer(
                 await loadSummarizer(model);
             }
 
+            // If text is short enough, summarize directly without chunking
+            if (text.length <= maxChunkLength) {
+                const result = await summarizer(text);
+                resolve(result);
+                return;
+            }
+
+            // For long text, use chunked processing
             const result = await processChunkedSummarization(
                 text,
                 maxChunkLength,
@@ -32,7 +41,8 @@ export async function runSummarizer(
                 },
                 (combinedText: string) => {
                     return [{ summary_text: combinedText }];
-                }
+                },
+                maxConcurrency
             );
 
             resolve(result);
@@ -68,6 +78,7 @@ interface SummarizationOptions {
     maxChunkLength?: number;
     overlap?: number;
     minChunkLength?: number;
+    maxConcurrency?: number;
     onProgress?: (progress: number, message: string) => void;
 }
 
@@ -77,10 +88,11 @@ export async function runSummarizerWithOptions(text: string, options: Summarizat
         maxChunkLength = 1000,
         overlap = 100,
         minChunkLength = 200,
+        maxConcurrency = 1, // Sequential processing for HuggingFace models
         onProgress
     } = options;
 
-    return runSummarizer(text, model, maxChunkLength, overlap, minChunkLength, onProgress);
+    return runSummarizer(text, model, maxChunkLength, overlap, minChunkLength, onProgress, maxConcurrency);
 }
 
 /**
@@ -95,14 +107,15 @@ export async function summarizeLongText(text: string, options: SummarizationOpti
         maxChunkLength = 1000,
         overlap = 100,
         minChunkLength = 200,
+        maxConcurrency = 1, // Sequential processing for HuggingFace models
         onProgress
     } = options;
 
     // For very long texts, use hierarchical approach
     if (text.length > maxChunkLength * 10) {
-        return hierarchicalSummarization(text, model, maxChunkLength, overlap, minChunkLength, onProgress);
+        return hierarchicalSummarization(text, model, maxChunkLength, overlap, minChunkLength, onProgress, maxConcurrency);
     } else {
-        return runSummarizer(text, model, maxChunkLength, overlap, minChunkLength, onProgress);
+        return runSummarizer(text, model, maxChunkLength, overlap, minChunkLength, onProgress, maxConcurrency);
     }
 }
 
@@ -115,7 +128,8 @@ async function hierarchicalSummarization(
     maxChunkLength: number, 
     overlap: number, 
     minChunkLength: number,
-    onProgress?: (progress: number, message: string) => void
+    onProgress?: (progress: number, message: string) => void,
+    maxConcurrency: number = 1 // Sequential processing for HuggingFace models
 ): Promise<any> {
     if (!summarizer) {
         await loadSummarizer(model);
@@ -132,7 +146,7 @@ async function hierarchicalSummarization(
     const sectionSummaries = [];
     for (let i = 0; i < largeChunks.length; i++) {
         const chunk = largeChunks[i];
-        const summary = await runSummarizer(chunk, model, maxChunkLength, overlap, minChunkLength) as any;
+        const summary = await runSummarizer(chunk, model, maxChunkLength, overlap, minChunkLength, undefined, maxConcurrency) as any;
         const summaryText = Array.isArray(summary) ? summary[0].summary_text : summary.summary_text;
         sectionSummaries.push(summaryText);
         

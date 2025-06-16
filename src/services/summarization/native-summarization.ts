@@ -15,7 +15,8 @@ export async function runNativeSummarizer(
     maxChunkLength: number = 1000,
     overlap: number = 100,
     minChunkLength: number = 200,
-    onProgress?: (progress: number, message: string) => void
+    onProgress?: (progress: number, message: string) => void,
+    maxConcurrency: number = 3
 ) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -37,6 +38,14 @@ export async function runNativeSummarizer(
 
             currentSummarizer = summarizer;
 
+            // If text is short enough, summarize directly without chunking
+            if (text.length <= maxChunkLength) {
+                const result = await summarizer.summarize(text);
+                resolve(result);
+                return;
+            }
+
+            // For long text, use chunked processing
             const result = await processChunkedSummarization(
                 text,
                 maxChunkLength,
@@ -51,7 +60,8 @@ export async function runNativeSummarizer(
                 },
                 (combinedText: string) => {
                     return combinedText; // Native summarizer returns strings directly
-                }
+                },
+                maxConcurrency
             );
 
             resolve(result);

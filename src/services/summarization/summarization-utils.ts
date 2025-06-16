@@ -83,7 +83,7 @@ export function splitTextIntoChunks(text: string, maxChunkLength: number, overla
 }
 
 /**
- * Generic chunked summarization function
+ * Generic chunked summarization function - assumes text is already long enough to need chunking
  */
 export async function processChunkedSummarization<T>(
     text: string,
@@ -93,30 +93,45 @@ export async function processChunkedSummarization<T>(
     onProgress: ((progress: number, message: string) => void) | undefined,
     summarizeFunction: (chunk: string) => Promise<T>,
     extractTextFunction: (summary: T) => string,
-    createReturnValue: (combinedText: string) => T
+    createReturnValue: (combinedText: string) => T,
+    maxConcurrency: number = 3
 ): Promise<T> {
-    // If text is short enough, summarize directly
-    if (text.length <= maxChunkLength) {
-        return await summarizeFunction(text);
-    }
-
     // Split text into chunks and summarize
     const chunks = splitTextIntoChunks(text, maxChunkLength, overlap, minChunkLength);
-    const chunkSummaries = [];
+    const chunkSummaries: string[] = new Array(chunks.length);
+    let completedChunks = 0;
 
-    onProgress?.(0, `Processing ${chunks.length} chunks...`);
+    onProgress?.(0, `Processing ${chunks.length} chunks concurrently (max ${maxConcurrency} at a time)...`);
 
-    // Summarize each chunk
-    for (let i = 0; i < chunks.length; i++) {
-        const chunk = chunks[i];
-        const summary = await summarizeFunction(chunk);
-        chunkSummaries.push(extractTextFunction(summary));
+    // Process chunks in batches with controlled concurrency
+    const processBatch = async (batchChunks: Array<{ chunk: string; index: number }>) => {
+        const promises = batchChunks.map(async ({ chunk, index }) => {
+            try {
+                const summary = await summarizeFunction(chunk);
+                chunkSummaries[index] = extractTextFunction(summary);
+                completedChunks++;
+                
+                const progress = (completedChunks / chunks.length) * 0.9;
+                onProgress?.(progress, `Processed ${completedChunks} of ${chunks.length} chunks`);
+            } catch (error) {
+                console.error(`Error processing chunk ${index}:`, error);
+                throw error;
+            }
+        });
         
-        const progress = ((i + 1) / chunks.length) * 0.9;
-        onProgress?.(progress, `Processed chunk ${i + 1} of ${chunks.length}`);
+        await Promise.all(promises);
+    };
+
+    // Create batches of chunks with their original indices
+    const chunksWithIndices = chunks.map((chunk, index) => ({ chunk, index }));
+    
+    // Process chunks in batches
+    for (let i = 0; i < chunksWithIndices.length; i += maxConcurrency) {
+        const batch = chunksWithIndices.slice(i, i + maxConcurrency);
+        await processBatch(batch);
     }
 
-    // Combine all summaries and return in the expected format
+    // Combine all summaries in order and return in the expected format
     onProgress?.(0.95, 'Combining summaries...');
     const combinedSummary = chunkSummaries.join(' ');
     
