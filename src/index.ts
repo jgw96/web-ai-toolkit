@@ -21,15 +21,22 @@ export async function textToSpeech(text: string, model: string = "Xenova/mms-tts
     }
 }
 
-export async function summarize(text: string) {
+export async function summarize(text: string, options: any = {}) {
     try {
-        if ('Summarizer' in self) {
+        if ('Summarizer' in self && !options.model) {
             const { runNativeSummarizer } = await import("./services/summarization/native-summarization");
-            return runNativeSummarizer(text);
+            return runNativeSummarizer(text, options, options.maxChunkLength, options.overlap, options.minChunkLength, options.onProgress);
         }
         else {
             const { runSummarizer } = await import("./services/summarization/summarization");
-            return runSummarizer(text);
+            const {
+                model = "Xenova/distilbart-cnn-6-6",
+                maxChunkLength = 1000,
+                overlap = 100,
+                minChunkLength = 200,
+                onProgress
+            } = options;
+            return runSummarizer(text, model, maxChunkLength, overlap, minChunkLength, onProgress);
         }
     }
     catch (err) {
@@ -37,6 +44,8 @@ export async function summarize(text: string) {
         return err;
     }
 }
+
+
 
 export async function ocr(image: Blob, model: string = "Xenova/trocr-small-printed") {
     try {

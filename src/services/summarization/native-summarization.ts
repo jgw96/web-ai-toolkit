@@ -1,3 +1,5 @@
+import { processChunkedSummarization } from './summarization-utils';
+
 interface SummarizerOptions {
     sharedContext: string;
     type: "tldr" | "key-points" | "teaser" | "headline";
@@ -7,7 +9,14 @@ interface SummarizerOptions {
 
 let currentSummarizer: any;
 
-export async function runNativeSummarizer(text: string, userOptions?: Partial<SummarizerOptions>) {
+export async function runNativeSummarizer(
+    text: string, 
+    userOptions?: Partial<SummarizerOptions>,
+    maxChunkLength: number = 1000,
+    overlap: number = 100,
+    minChunkLength: number = 200,
+    onProgress?: (progress: number, message: string) => void
+) {
     return new Promise(async (resolve, reject) => {
         try {
             if (!('Summarizer' in self)) {
@@ -28,8 +37,24 @@ export async function runNativeSummarizer(text: string, userOptions?: Partial<Su
 
             currentSummarizer = summarizer;
 
-            const summary = await summarizer.summarize(text);
-            resolve(summary);
+            const result = await processChunkedSummarization(
+                text,
+                maxChunkLength,
+                overlap,
+                minChunkLength,
+                onProgress,
+                async (chunk: string) => {
+                    return await summarizer.summarize(chunk);
+                },
+                (summary: string) => {
+                    return summary; // Native summarizer returns strings directly
+                },
+                (combinedText: string) => {
+                    return combinedText; // Native summarizer returns strings directly
+                }
+            );
+
+            resolve(result);
         } catch (err) {
             reject(err);
         }
