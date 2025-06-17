@@ -29,11 +29,10 @@ export async function summarize(text: string, options: any = {}) {
                 maxChunkLength = 1000,
                 overlap = 100,
                 minChunkLength = 200,
-                maxConcurrency = 3,
                 onProgress,
                 ...summarizerOptions
             } = options;
-            return runNativeSummarizer(text, summarizerOptions, maxChunkLength, overlap, minChunkLength, onProgress, maxConcurrency);
+            return runNativeSummarizer(text, summarizerOptions, maxChunkLength, overlap, minChunkLength, onProgress);
         }
         else {
             const { runSummarizer } = await import("./services/summarization/summarization");
@@ -42,10 +41,9 @@ export async function summarize(text: string, options: any = {}) {
                 maxChunkLength = 1000,
                 overlap = 100,
                 minChunkLength = 200,
-                maxConcurrency = 1, // Sequential processing for HuggingFace models
                 onProgress
             } = options;
-            return runSummarizer(text, model, maxChunkLength, overlap, minChunkLength, onProgress, maxConcurrency);
+            return runSummarizer(text, model, maxChunkLength, overlap, minChunkLength, onProgress);
         }
     }
     catch (err) {

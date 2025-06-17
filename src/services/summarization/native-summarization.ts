@@ -15,8 +15,7 @@ export async function runNativeSummarizer(
     maxChunkLength: number = 1000,
     overlap: number = 100,
     minChunkLength: number = 200,
-    onProgress?: (progress: number, message: string) => void,
-    maxConcurrency: number = 3
+    onProgress?: (progress: number, message: string) => void
 ) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -60,8 +59,7 @@ export async function runNativeSummarizer(
                 },
                 (combinedText: string) => {
                     return combinedText; // Native summarizer returns strings directly
-                },
-                maxConcurrency
+                }
             );
 
             resolve(result);
