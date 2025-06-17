@@ -1,6 +1,6 @@
 {
   "name": "web-ai-toolkit",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "repository": "https://github.com/jgw96/web-ai-toolkit",
   "keywords": [
     "ai",
@@ -25,12 +25,23 @@
     "test": "vitest",
     "build": "vite build",
     "start": "npm run build && npx httpster test.html",
-    "test:browser": "vitest --workspace=vitest.workspace.ts"
+    "test:browser": "vitest --workspace=vitest.workspace.ts",
+    "lint": "eslint . --ext .ts,.js",
+    "lint:fix": "eslint . --ext .ts,.js --fix",
+    "lint:check": "eslint . --ext .ts,.js --max-warnings 0"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/js": "^9.29.0",
+    "@typescript-eslint/eslint-plugin": "^8.34.1",
+    "@typescript-eslint/parser": "^8.34.1",
     "@vitest/browser": "^2.1.2",
+    "eslint": "^9.29.0",
+    "eslint-import-resolver-typescript": "^4.4.3",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-n": "^17.20.0",
+    "eslint-plugin-promise": "^7.2.1",
     "playwright": "^1.47.2",
     "typescript": "^5.6.2",
     "vite": "^5.4.8",
