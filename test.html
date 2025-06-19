@@ -27,6 +27,10 @@
         <button id="image-classify-button">Test Image Classification</button>
     </div>
 
+    <div id="do-rag-block">
+        <button id="do-rag-button">Test DoRAG Search</button>
+    </div>
+
 
     <script type="module">
         document.querySelector("#summarize_button").addEventListener("click", async () => {
@@ -70,6 +74,21 @@
             const text = await classifyImage(URL.createObjectURL(file));
             console.log(text);
             URL.revokeObjectURL(file);
+        });
+
+        document.querySelector("#do-rag-button").addEventListener("click", async () => {
+            const { doRAGSearch } = await import("/dist/index.js");
+
+            // open up .txt files using the file system access api
+            window.showOpenFilePicker().then(async (file) => {
+                const fileBlob = await file[0].getFile();
+                const text = await fileBlob.text();
+
+                const query = "What is a coho?";
+                const ragQuery = await doRAGSearch([text], query);
+                console.log(ragQuery);
+            });
+
         });
     </script>
 </body>
