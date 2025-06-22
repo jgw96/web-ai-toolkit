@@ -1,8 +1,8 @@
 import { pipeline, env } from '@huggingface/transformers';
 
-import { webGPUCheck } from '../../utils';
+import { webGPUCheck } from '../../utils.js';
 
-import { processChunkedSummarization, splitTextIntoChunks } from './summarization-utils';
+import { processChunkedSummarization, splitTextIntoChunks } from './summarization-utils.js';
 
 let summarizer: any = undefined;
 
@@ -73,11 +73,11 @@ async function loadSummarizer(model: string): Promise<void> {
 }
 
 interface SummarizationOptions {
-    model?: string;
-    maxChunkLength?: number;
-    overlap?: number;
-    minChunkLength?: number;
-    onProgress?: (progress: number, message: string) => void;
+  model?: string;
+  maxChunkLength?: number;
+  overlap?: number;
+  minChunkLength?: number;
+  onProgress?: (progress: number, message: string) => void;
 }
 
 export async function runSummarizerWithOptions(text: string, options: SummarizationOptions = {}) {

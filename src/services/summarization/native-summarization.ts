@@ -1,16 +1,16 @@
-import { processChunkedSummarization } from './summarization-utils';
+import { processChunkedSummarization } from './summarization-utils.js';
 
 interface SummarizerOptions {
-    sharedContext: string;
-    type: 'tldr' | 'key-points' | 'teaser' | 'headline';
-    format: 'markdown' | 'plain-text';
-    length: 'short' | 'medium' | 'long';
+  sharedContext: string;
+  type: 'tldr' | 'key-points' | 'teaser' | 'headline';
+  format: 'markdown' | 'plain-text';
+  length: 'short' | 'medium' | 'long';
 }
 
 let currentSummarizer: any;
 
 export async function runNativeSummarizer(
-  text: string, 
+  text: string,
   userOptions?: Partial<SummarizerOptions>,
   maxChunkLength = 1000,
   overlap = 100,

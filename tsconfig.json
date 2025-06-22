@@ -19,7 +19,7 @@
     "noImplicitReturns": true,
     "removeComments": false,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "nodenext",
+    "moduleResolution": "bundler",
     "types": [
       "@webgpu/types"
     ],
