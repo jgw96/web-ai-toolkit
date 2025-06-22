@@ -1,15 +1,18 @@
-/* eslint-disable no-async-promise-executor */
-import { pipeline, env } from '@huggingface/transformers';
+import { KokoroTTS } from "kokoro-js";
 
 let synthesizer: any = undefined;
 
-export async function runSynthesizer(text: string, model = 'Xenova/mms-tts-eng') {
+export async function runSynthesizer(text: string) {
   return new Promise(async (resolve, reject) => {
     try {
       if (!synthesizer) {
-        await loadSynthesizer(model);
+        await loadSynthesizer();
       };
-      const out = await synthesizer(text);
+      const out = await synthesizer.generate(text, {
+        // Use `tts.list_voices()` to list all available voices
+        voice: "af_heart",
+      });
+
       resolve(out);
     }
     catch (err) {
@@ -18,16 +21,16 @@ export async function runSynthesizer(text: string, model = 'Xenova/mms-tts-eng')
   });
 }
 
-async function loadSynthesizer(model: string): Promise<void> {
+export async function loadSynthesizer() {
   return new Promise(async (resolve) => {
-    if (!synthesizer) {
-      env.allowLocalModels = false;
-      env.useBrowserCache = false;
-      synthesizer = await pipeline('text-to-speech', model || 'Xenova/mms-tts-eng');
-      resolve();
-    }
-    else {
-      resolve();
-    }
-  });
+    const model_id = "onnx-community/Kokoro-82M-v1.0-ONNX";
+    const tts = await KokoroTTS.from_pretrained(model_id, {
+      dtype: "fp32", // Options: "fp32", "fp16", "q8", "q4", "q4f16"
+      device: "webgpu", // Options: "wasm", "webgpu" (web) or "cpu" (node). If using "webgpu", we recommend using dtype="fp32".
+    });
+
+    synthesizer = tts;
+
+    resolve(synthesizer);
+  })
 }

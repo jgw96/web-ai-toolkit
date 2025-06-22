@@ -46,8 +46,19 @@
             const { textToSpeech } = await import("/dist/index.js");
 
             const text = "Hello, world!";
-            const audio = await textToSpeech(text);
-            console.log(audio);
+            const audioData = await textToSpeech(text);
+            console.log(audioData);
+
+            // audioData.data is a float32Array
+            // play this audio
+            const audioContext = new AudioContext();
+            const audioBuffer = audioContext.createBuffer(1, audioData.audio.length, audioData.sampling_rate);
+            audioBuffer.getChannelData(0).set(audioData.audio);
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+            source.connect(audioContext.destination);
+            source.start(0);
+            console.log("Playing audio...");
         });
 
         document.querySelector("#speech-to-text-button").addEventListener("click", async () => {

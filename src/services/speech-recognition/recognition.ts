@@ -55,6 +55,7 @@ export async function loadTranscriber(model = 'Xenova/whisper-tiny', timestamps:
     if (!transcriber) {
       env.allowLocalModels = false;
       env.useBrowserCache = false;
+      // @ts-ignore
       transcriber = await pipeline('automatic-speech-recognition', model || 'Xenova/whisper-tiny', {
         // @ts-ignore
         return_timestamps: timestamps,

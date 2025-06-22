@@ -13,7 +13,7 @@ export async function transcribeAudioFile(audioFile: Blob, model = 'Xenova/whisp
 export async function textToSpeech(text: string, model = 'Xenova/mms-tts-eng') {
   try {
     const { runSynthesizer } = await import('./services/text-to-speech/tts');
-    return runSynthesizer(text, model);
+    return runSynthesizer(text);
   }
   catch (err) {
     console.error(err);
