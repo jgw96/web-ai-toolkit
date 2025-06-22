@@ -1,7 +1,11 @@
 
 # Web AI Toolkit
 
-The Web AI Toolkit simplifies the integration of AI features, such as OCR, speech-to-text, text summarization and more into your application. It ensures data privacy and offline capability by running all AI workloads locally, leveraging WebNN when available, with a fallback to WebGPU.
+The Web AI Toolkit simplifies the integration of AI features, such as OCR, speech-to-text, text summarization and more into your application. It ensures data privacy and offline capability by running all AI workloads locally.
+
+## Device Support
+
+The functions the Web AI Toolkit provides will run on any device that supports WebGPU. Some of our APIs, such as the summarize function, will use the Built-In Summarizer API available in Chromium browsers when available, otherwise it will fall back to a WebGPU backend.
 
 ## Installation
 
@@ -18,17 +22,17 @@ the code will attempt to choose the GPU first and then the CPU otherwise.*
 
 | Function Name         | Parameter      | Type                   | Default Value | Supported Hardware |
 |-----------------------|----------------|------------------------|---------------|--------------------|
-| transcribeAudioFile   | audioFile      | Blob                   | -             | GPU / CPU               |
+| transcribeAudioFile   | audioFile      | Blob                   | -             | GPU              |
 |                       | model          | string                 | "Xenova/whisper-tiny"|                    |
 |                       | timestamps     | boolean                | false         |                    |
 |                       | language       | string                 | "en-US"       |                    |
-| textToSpeech          | text           | string                 | -             | GPU / CPU               |
-|                       | model          | string                 | "Xenova/mms-tts-eng"|                    |
-| summarize             | text           | string                 | -             | GPU / CPU               |
+| textToSpeech          | text           | string                 | -             | GPU              |
+|                       | model          | string                 | "Kokoro-js"|                    |
+| summarize             | text           | string                 | -             | GPU              |
 |                       | model          | string                 | "Xenova/distilbart-cnn-6-6"|                |
-| ocr                   | image          | Blob                   | -             | GPU / CPU               |
+| ocr                   | image          | Blob                   | -             | GPU               |
 |                       | model          | string                 | "Xenova/trocr-small-printed"|                 |
-| classifyImage         | image          | Blob                   | -             | NPU / GPU / CPU               |
+| classifyImage         | image          | Blob                   | -             | NPU / GPU              |
 |                       | model          | string                 | "Xenova/resnet-50"|                 |
 | doRAGSearch           | texts          | Array<string>          | []            | GPU
 |                       | query          | string                 | ""            |                      |
@@ -109,7 +113,7 @@ console.log(text);
 
 ## Technical Details
 
-The Web AI Toolkit utilizes the [transformers.js project](https://huggingface.co/docs/transformers.js/index) to run AI workloads. All AI processing is performed locally on the device, ensuring data privacy and reducing latency. AI workloads are run using the [WebNN API](https://learn.microsoft.com/en-us/windows/ai/directml/webnn-overview) when available, otherwise falling back to the WebGPU API, or even to the CPU with WebAssembly. Choosing the correct hardware to target is handled by the library.
+All AI processing is performed locally on the device, ensuring data privacy and reducing latency. All AI workloads are run using the WebGPU API or using the built in Chromium AI APIs in Edge and Chrome.
 
 ## Contribution
 

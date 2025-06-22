@@ -10,7 +10,7 @@ export async function transcribeAudioFile(audioFile: Blob, model = 'Xenova/whisp
   }
 }
 
-export async function textToSpeech(text: string, model = 'Xenova/mms-tts-eng') {
+export async function textToSpeech(text: string) {
   try {
     const { runSynthesizer } = await import('./services/text-to-speech/tts');
     return runSynthesizer(text);
@@ -66,23 +66,23 @@ export async function ocr(image: Blob, model = 'Xenova/trocr-small-printed') {
 }
 
 export async function classifyImage(image: Blob, model: string = "Xenova/resnet-50") {
-    try {
-        const { runClassifier } = await import("./services/image-classification/image-classification");
-        return runClassifier(image, model);
-    }
-    catch (err) {
-        console.error(err);
-        return err;
-    }
+  try {
+    const { runClassifier } = await import("./services/image-classification/image-classification");
+    return runClassifier(image, model);
+  }
+  catch (err) {
+    console.error(err);
+    return err;
+  }
 }
 
 export async function doRAGSearch(texts: string[], query: string) {
-    try {
-        const { simpleRAG } = await import("./services/rag/rag");
-        return simpleRAG(texts, query);
-    }
-    catch (err) {
-        console.error(err);
-        return err;
-    }
+  try {
+    const { simpleRAG } = await import("./services/rag/rag");
+    return simpleRAG(texts, query);
+  }
+  catch (err) {
+    console.error(err);
+    return err;
+  }
 }
