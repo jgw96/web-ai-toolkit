@@ -5,32 +5,32 @@ import dts from 'vite-plugin-dts';
 // https://vitejs.dev/config/
 export default defineConfig({
   worker: {
-    format: "es"
+    format: 'es',
   },
   optimizeDeps: {
     esbuildOptions: {
-      target: "es2022",
-    }
+      target: 'es2022',
+    },
   },
   build: {
     sourcemap: false,
-    assetsDir: "",
+    assetsDir: '',
     cssMinify: true,
-    target: "esnext",
+    target: 'esnext',
     lib: {
-      entry: "src/index.ts",
-      formats: ["es"],
-      fileName: "index",
+      entry: 'src/index.ts',
+      formats: ['es'],
+      fileName: 'index',
     },
     rollupOptions: {
       output: {
-        format: "es",
+        format: 'es',
       },
     },
   },
   plugins: [
     dts({
-      rollupTypes: true
-    })
-  ]
-})
+      rollupTypes: true,
+    }),
+  ],
+});

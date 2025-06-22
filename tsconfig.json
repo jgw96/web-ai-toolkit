@@ -19,8 +19,10 @@
     "noImplicitReturns": true,
     "removeComments": false,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
-    "types": ["@webgpu/types"],
+    "moduleResolution": "bundler",
+    "types": [
+      "@webgpu/types"
+    ],
   },
   "include": [
     "src/**/*.ts"

@@ -1,6 +1,6 @@
-export async function transcribeAudioFile(audioFile: Blob, model: string = "Xenova/whisper-tiny", timestamps: boolean = false, language: string = "en-US") {
+export async function transcribeAudioFile(audioFile: Blob, model = 'Xenova/whisper-tiny', timestamps = false, language = 'en-US') {
     try {
-        const { loadTranscriber, doLocalWhisper } = await import("./services/speech-recognition/recognition");
+        const { loadTranscriber, doLocalWhisper } = await import('./services/speech-recognition/recognition.js');
         await loadTranscriber(model, timestamps, language);
         return doLocalWhisper(audioFile, model);
     }
@@ -10,10 +10,10 @@ export async function transcribeAudioFile(audioFile: Blob, model: string = "Xeno
     }
 }
 
-export async function textToSpeech(text: string, model: string = "Xenova/mms-tts-eng") {
+export async function textToSpeech(text: string) {
     try {
-        const { runSynthesizer } = await import("./services/text-to-speech/tts");
-        return runSynthesizer(text, model);
+        const { runSynthesizer } = await import('./services/text-to-speech/tts.js');
+        return runSynthesizer(text);
     }
     catch (err) {
         console.error(err);
@@ -21,10 +21,30 @@ export async function textToSpeech(text: string, model: string = "Xenova/mms-tts
     }
 }
 
-export async function summarize(text: string, model: string = "Xenova/distilbart-cnn-6-6") {
+export async function summarize(text: string, options: any = {}) {
     try {
-        const { runSummarizer } = await import("./services/summarization/summarization");
-        return runSummarizer(text, model);
+        if ('Summarizer' in self && !options.model) {
+            const { runNativeSummarizer } = await import('./services/summarization/native-summarization.js');
+            const {
+                maxChunkLength = 1000,
+                overlap = 100,
+                minChunkLength = 200,
+                onProgress,
+                ...summarizerOptions
+            } = options;
+            return runNativeSummarizer(text, summarizerOptions, maxChunkLength, overlap, minChunkLength, onProgress);
+        }
+        else {
+            const { runSummarizer } = await import('./services/summarization/summarization.js');
+            const {
+                model = 'Xenova/distilbart-cnn-6-6',
+                maxChunkLength = 1000,
+                overlap = 100,
+                minChunkLength = 200,
+                onProgress,
+            } = options;
+            return runSummarizer(text, model, maxChunkLength, overlap, minChunkLength, onProgress);
+        }
     }
     catch (err) {
         console.error(err);
@@ -32,9 +52,11 @@ export async function summarize(text: string, model: string = "Xenova/distilbart
     }
 }
 
-export async function ocr(image: Blob, model: string = "Xenova/trocr-small-printed") {
+
+
+export async function ocr(image: Blob, model = 'Xenova/trocr-small-printed') {
     try {
-        const { runOCR } = await import("./services/ocr/ocr");
+        const { runOCR } = await import('./services/ocr/ocr.js');
         return runOCR(image, model);
     }
     catch (err) {
@@ -45,7 +67,7 @@ export async function ocr(image: Blob, model: string = "Xenova/trocr-small-print
 
 export async function classifyImage(image: Blob, model: string = "Xenova/resnet-50") {
     try {
-        const { runClassifier } = await import("./services/image-classification/image-classification");
+        const { runClassifier } = await import("./services/image-classification/image-classification.js");
         return runClassifier(image, model);
     }
     catch (err) {
@@ -56,7 +78,7 @@ export async function classifyImage(image: Blob, model: string = "Xenova/resnet-
 
 export async function doRAGSearch(texts: string[], query: string) {
     try {
-        const { simpleRAG } = await import("./services/rag/rag");
+        const { simpleRAG } = await import("./services/rag/rag.js");
         return simpleRAG(texts, query);
     }
     catch (err) {
