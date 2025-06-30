@@ -57,11 +57,6 @@ The Web AI Toolkit leverages cutting-edge web technologies to run AI models dire
    - Supports multiple model formats (ONNX, etc.)
    - Optimized for different hardware capabilities
 
-4. **Progressive Enhancement**: The library gracefully handles different device capabilities:
-   - Automatically selects appropriate model sizes based on available memory
-   - Falls back to lighter models on less powerful devices
-   - Provides progress callbacks for long-running operations
-
 ## 📚 API Reference
 
 ### `summarize(text, options?)`
@@ -312,17 +307,6 @@ The Web AI Toolkit works on any modern web browser, with performance optimizatio
 - **Memory**: Minimum 4GB RAM recommended, 8GB+ for larger models
 - **Storage**: Models are cached locally (typically 50MB-500MB per model)
 
-### Performance Characteristics
-
-| Function | Typical Processing Time | Model Size | Hardware Preference |
-|----------|------------------------|------------|-------------------|
-| `summarize` | 2-10 seconds | ~250MB | GPU → Built-in AI → CPU |
-| `transcribeAudioFile` | 1-5 seconds | ~150MB | GPU → CPU |
-| `textToSpeech` | 1-3 seconds | ~100MB | GPU → CPU |
-| `ocr` | 1-4 seconds | ~200MB | GPU → CPU |
-| `classifyImage` | 0.5-2 seconds | ~100MB | NPU → GPU → CPU |
-| `doRAGSearch` | 2-8 seconds | ~300MB | GPU → CPU |
-
 ### Browser Compatibility
 
 - **Chrome/Edge 113+**: Full support including built-in AI APIs
@@ -362,22 +346,6 @@ We welcome contributions to the Web AI Toolkit! Here's how you can help:
    ```bash
    npm run start    # Start development server
    ```
-
-### Contribution Guidelines
-
-- **Issues**: Open an issue for bugs, feature requests, or discussions
-- **Pull Requests**: For major changes, please open an issue first
-- **Code Style**: Follow the existing ESLint configuration
-- **Tests**: Add tests for new functionality
-- **Documentation**: Update README and code comments
-
-### Areas for Contribution
-
-- 🆕 Additional AI model integrations
-- 🎯 Performance optimizations
-- 🧪 Browser compatibility testing
-- 📚 Documentation improvements
-- 🐛 Bug fixes and stability improvements
 
 ## 📄 License
 
